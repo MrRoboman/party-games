@@ -1,6 +1,5 @@
 let world, engine
-let body
-let ground
+let bodies = []
 
 function setup() {
   createCanvas(800, 600)
@@ -9,15 +8,59 @@ function setup() {
   engine = Matter.Engine.create()
   world = engine.world
 
-  body = new Box(100, 100, 100, 100)
-  ground = new Box(width / 2, height - 25, width, 50, { isStatic: true })
+  buildWalls()
+
+  // Box
+  addBody(new Box(100, 100, 100, 100))
+  // Box
+  addBody(new Box(150, 250, 100, 100))
 }
 
 function draw() {
   Matter.Engine.update(engine)
 
   background(120)
+  drawBodies()
+}
 
-  body.show()
-  ground.show()
+function addBody(newBody) {
+  bodies.push(newBody)
+}
+
+function drawBodies() {
+  bodies.forEach(body => body.show())
+}
+
+function buildWalls() {
+  // Ground, Walls, Ceiling
+  const thickness = 50
+  const halfThickness = thickness / 2
+
+  // Left Wall
+  addBody(
+    new Box(halfThickness, height / 2, thickness, height, {
+      isStatic: true,
+    }),
+  )
+
+  // Right Wall
+  addBody(
+    new Box(width - halfThickness, height / 2, thickness, height, {
+      isStatic: true,
+    }),
+  )
+
+  // Ground
+  addBody(
+    new Box(width / 2, height - halfThickness, width, thickness, {
+      isStatic: true,
+    }),
+  )
+
+  // Ceiling
+  addBody(
+    new Box(width / 2, halfThickness, width, thickness, {
+      isStatic: true,
+    }),
+  )
 }

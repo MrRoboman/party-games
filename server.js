@@ -20,10 +20,6 @@ app.get('/controller/', function (req, res) {
   res.sendFile(__dirname + '/public/controller/index.html')
 })
 
-app.get('/game/', function (req, res) {
-  res.sendFile(__dirname + '/public/game/index.html')
-})
-
 io.on('connection', function (socket) {
   console.log('a user connected')
 

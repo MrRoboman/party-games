@@ -10,6 +10,8 @@ const gameClients = {}
 const players = {}
 const velocity = { x: 0, y: 0 }
 
+const buttons = [false, false, false]
+
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function (req, res) {
@@ -17,7 +19,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/controller/', function (req, res) {
-  res.sendFile(__dirname + '/public/controller/index.html')
+  res.sendFile(__dirname + '/public/controller.html')
 })
 
 io.on('connection', function (socket) {
@@ -34,6 +36,7 @@ io.on('connection', function (socket) {
   // socket.broadcast.emit('newPlayer', players[socket.id])
 
   socket.on('gameClient', () => {
+    console.log('Game Client Joined')
     gameClients[socket.id] = socket
     socket.emit('currentPlayers', players)
   })
@@ -62,6 +65,17 @@ io.on('connection', function (socket) {
     for (const id in gameClients) {
       const game = gameClients[id]
       game.emit('velocity', { x, y })
+    }
+  })
+
+  socket.on('button', buttons => {
+    // console.log('touches', touches) // eslint-disable-line
+    // console.log('button:', buttonIdx, pressed)
+    // buttons[buttonIdx] = pressed
+    for (const id in gameClients) {
+      const game = gameClients[id]
+      // console.log('touches', touches) // eslint-disable-line
+      game.emit('buttons', buttons)
     }
   })
 })

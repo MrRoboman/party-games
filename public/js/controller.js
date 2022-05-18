@@ -6,49 +6,77 @@ let mouseCurrent
 function setupSocket() {
   socket = io()
 
-  socket.on('currentPlayers', players => {
-    console.log({ players }) // eslint-disable-line
-    for (id in players) {
-      const player = players[id]
-      circle(player.x, player.y, 50)
-    }
-  })
+  socket.emit('controllerClient')
+  // socket.on('currentPlayers', players => {
+  //   console.log({ players }) // eslint-disable-line
+  //   for (id in players) {
+  //     const player = players[id]
+  //     circle(player.x, player.y, 50)
+  //   }
+  // })
 }
 
+let buttonHeight
+
 function setup() {
-  ellipseMode(RADIUS)
-  createCanvas(800, 600)
+  // ellipseMode(RADIUS)
+  console.log({ windowWidth, windowHeight })
+  createCanvas(windowWidth, windowHeight)
   background(120)
+
+  buttonHeight = Math.floor(windowHeight / 3)
+  strokeWeight(4)
+  for (let i = 0; i < 3; i++) {
+    rect(0, buttonHeight * i, windowWidth, buttonHeight)
+  }
 
   setupSocket()
 }
 
 function draw() {
-  background(120)
-
-  if (mouseOrigin) {
-    if (mouseCurrent.x !== mouseX || mouseCurrent.y !== mouseY) {
-      mouseCurrent.x = mouseX
-      mouseCurrent.y = mouseY
-      const { x, y } = p5.Vector.sub(mouseCurrent, mouseOrigin)
-      socket.emit('control', { x, y })
-    }
-    const rad = p5.Vector.sub(mouseCurrent, mouseOrigin).mag() + 50
-    noFill()
-    circle(mouseOrigin.x, mouseOrigin.y, rad)
-
-    fill(255)
-    circle(mouseCurrent.x, mouseCurrent.y, 50)
-  }
+  // background(120)
 }
 
-function mousePressed() {
-  mouseOrigin = createVector(mouseX, mouseY)
-  mouseCurrent = createVector(mouseX, mouseY)
+const touchesById = {}
+let buttons = [false, false, false]
+
+function touchStarted() {
+  // console.log(Math.floor(mouseY / buttonHeight)) // eslint-disable-line
+  const newTouches = touches.filter(touch => !touchesById[touch.id])
+  newTouches.forEach(touch => {
+    touchesById[touch.id] = {
+      buttonIdx: Math.floor(touch.y / buttonHeight),
+    }
+  })
+  // const buttonIdx = Math.floor(mouseY / buttonHeight)
+  buttons = [false, false, false]
+  for (const touchId in touchesById) {
+    const touch = touchesById[touchId]
+    buttons[touch.buttonIdx] = true
+  }
+
+  socket.emit('button', buttons)
+
+  return false // To prevent unexpected behahavior
 }
 
 function mouseReleased() {
-  mouseOrigin = null
-  mouseCurrent = null
-  socket.emit('control', { x: 0, y: 0 })
+  const savedTouchIds = Object.keys(touchesById)
+  const activeTouchIds = touches.map(touch => String(touch.id))
+  const releasedTouchIds = savedTouchIds.filter(
+    touchId => !activeTouchIds.includes(touchId),
+  )
+  releasedTouchIds.forEach(touchId => delete touchesById[touchId])
+
+  // const buttonIdx = Math.floor(mouseY / buttonHeight)
+  buttons = [false, false, false]
+  for (const touchId in touchesById) {
+    const touch = touchesById[touchId]
+    buttons[touch.buttonIdx] = true
+  }
+  socket.emit('button', buttons)
 }
+
+// function pressUp() {
+//   console.log('up')
+// }

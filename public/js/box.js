@@ -15,12 +15,12 @@ class Box {
     this.w = w
     this.h = h
 
-    this.body = Matter.Bodies.rectangle(x, y, w, h)
+    this.body = Matter.Bodies.rectangle(x, y, w, h, options)
     Matter.World.add(world, this.body)
 
-    for (const key in options) {
-      this.body[key] = options[key]
-    }
+    // for (const key in options) {
+    //   this.body[key] = options[key]
+    // }
   }
 
   get x() {
@@ -36,11 +36,12 @@ class Box {
   }
 
   input() {
-    this.up(this.buttons.up)
-    this.left(this.buttons.left)
-    this.right(this.buttons.right)
-    this.rotateRight(this.buttons.rotateRight)
-    this.rotateLeft(this.buttons.rotateLeft)
+    const mult = 1 // for testing
+    this.up(this.buttons.up * mult)
+    this.left(this.buttons.left * mult)
+    this.right(this.buttons.right * mult)
+    this.rotateRight(this.buttons.rotateRight * mult)
+    this.rotateLeft(this.buttons.rotateLeft * mult)
   }
 
   up(multiplier = 1) {

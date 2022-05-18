@@ -1,5 +1,6 @@
 let world, engine
 let bodies = []
+let body
 
 function setup() {
   createCanvas(800, 600)
@@ -11,12 +12,14 @@ function setup() {
   buildWalls()
 
   // Box
-  addBody(new Box(100, 100, 100, 100))
+  body = addBody(new Box(100, 100, 100, 100))
   // Box
-  addBody(new Box(150, 250, 100, 100))
+  addBody(new Box(175, 250, 100, 100))
 }
 
 function draw() {
+  body.input()
+
   Matter.Engine.update(engine)
 
   background(120)
@@ -25,6 +28,7 @@ function draw() {
 
 function addBody(newBody) {
   bodies.push(newBody)
+  return newBody
 }
 
 function drawBodies() {
@@ -63,4 +67,28 @@ function buildWalls() {
       isStatic: true,
     }),
   )
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    body.buttons.up += 1
+  }
+  if (keyCode === LEFT_ARROW) {
+    body.buttons.left += 1
+  }
+  if (keyCode === RIGHT_ARROW) {
+    body.buttons.right += 1
+  }
+}
+
+function keyReleased() {
+  if (keyCode === UP_ARROW) {
+    body.buttons.up -= 1
+  }
+  if (keyCode === LEFT_ARROW) {
+    body.buttons.left -= 1
+  }
+  if (keyCode === RIGHT_ARROW) {
+    body.buttons.right -= 1
+  }
 }

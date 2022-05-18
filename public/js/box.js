@@ -1,5 +1,14 @@
 class Box {
   constructor(x, y, w, h, options = {}) {
+    this.thrust = 0.012
+    this.thrustLateral = 0.005
+
+    this.buttons = {
+      up: 0,
+      left: 0,
+      right: 0,
+    }
+
     this.w = w
     this.h = h
 
@@ -21,6 +30,33 @@ class Box {
 
   get angle() {
     return this.body.angle
+  }
+
+  input() {
+    this.up(this.buttons.up)
+    this.left(this.buttons.left)
+    this.right(this.buttons.right)
+  }
+
+  up(multiplier = 1) {
+    Matter.Body.applyForce(this.body, this.body.position, {
+      x: 0,
+      y: -this.thrust * multiplier,
+    })
+  }
+
+  left(multiplier = 1) {
+    Matter.Body.applyForce(this.body, this.body.position, {
+      x: -this.thrustLateral * multiplier,
+      y: 0,
+    })
+  }
+
+  right(multiplier = 1) {
+    Matter.Body.applyForce(this.body, this.body.position, {
+      x: this.thrustLateral * multiplier,
+      y: 0,
+    })
   }
 
   show() {

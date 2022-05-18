@@ -14,7 +14,7 @@ function setup() {
   // Box
   body = addBody(new Box(100, 100, 100, 100))
   // Box
-  addBody(new Box(175, 250, 100, 100))
+  // addBody(new Box(175, 250, 100, 100))
 }
 
 function draw() {
@@ -70,6 +70,7 @@ function buildWalls() {
 }
 
 function keyPressed() {
+  console.log({ keyCode }) // eslint-disable-line
   if (keyCode === UP_ARROW) {
     body.buttons.up += 1
   }
@@ -78,6 +79,16 @@ function keyPressed() {
   }
   if (keyCode === RIGHT_ARROW) {
     body.buttons.right += 1
+  }
+
+  // D
+  if (keyCode === 68) {
+    body.buttons.rotateRight += 1
+  }
+
+  // A
+  if (keyCode === 65) {
+    body.buttons.rotateLeft += 1
   }
 }
 
@@ -90,5 +101,15 @@ function keyReleased() {
   }
   if (keyCode === RIGHT_ARROW) {
     body.buttons.right -= 1
+  }
+
+  // D
+  if (keyCode === 68) {
+    body.buttons.rotateRight -= 1
+  }
+
+  // A
+  if (keyCode === 65) {
+    body.buttons.rotateLeft -= 1
   }
 }

@@ -1,19 +1,19 @@
-let socket
-
 let config = {
   arena: {
     ceilingThickness: 50,
     floorThickness: 50,
     goalThickness: 50,
-    goalWidth: 100,
-    wallThickness: 100,
+    goalWidth: 300,
+    rampThickness: 200,
+    wallThickness: 200,
   },
 }
 
-function buildArena() {}
+let socket
 
 let world, engine
 let bodies = []
+let arenaBods = []
 let body
 let ball
 
@@ -27,13 +27,6 @@ function setupSocket() {
     body.buttons.left = left ? 1 : 0
     body.buttons.right = right ? 1 : 0
   })
-  // socket.on('currentPlayers', players => {
-  //   console.log({ players }) // eslint-disable-line
-  //   for (id in players) {
-  //     const player = players[id]
-  //     circle(player.x, player.y, 50)
-  //   }
-  // })
 }
 
 function setup() {
@@ -50,22 +43,21 @@ function setup() {
 
   engine.gravity.scale = 0.0007
 
-  buildWalls()
+  createArenaBodies()
 
   // Box
   body = addBody(
-    new Box(100, 100, 100, 100, {
-      // inertia: Infinity,
-      // restitution: 1,
-      // friction: 0,
-      // frictionAir: 0,
-      // frictionStatic: 0,
-    }),
+    new Box(
+      width / 4,
+      height - config.arena.floorThickness - 100,
+      100,
+      100,
+      {},
+    ),
   )
   // Box
-  // addBody(new Box(175, 250, 100, 100))
   ball = addBody(
-    new Ball(700.4150010673924, height / 2 - 200, 50, {
+    new Ball(width / 2, height / 2 - 200, 50, {
       inertia: Infinity,
       restitution: 1,
       friction: 0,
@@ -74,10 +66,6 @@ function setup() {
       density: 0.0005,
     }),
   )
-  // ball.body.restitution = 1
-  // ball.body.mass = 0.0000000001
-  // body.body.restitution = 1
-  // Matter.Body.setMass(body, 100)
 }
 
 function draw() {
@@ -95,35 +83,82 @@ function addBody(newBody) {
 }
 
 function drawBodies() {
+  arenaBods.forEach(body => body.show())
   bodies.forEach(body => body.show())
 }
 
-function buildWalls() {
-  // Ground, Walls, Ceiling
-  const thickness = 50
-  const halfThickness = thickness / 2
+function createArenaBodies() {
+  const {
+    ceilingThickness,
+    floorThickness,
+    goalThickness,
+    goalWidth,
+    rampThickness,
+    wallThickness,
+  } = config.arena
 
-  // Left Wall
-  addBody(new Wall(halfThickness, height / 2, thickness, height))
+  // Build Ramps
+  ;[
+    [wallThickness, ceilingThickness],
+    [wallThickness, height - floorThickness],
+    [width - wallThickness, ceilingThickness],
+    [width - wallThickness, height - floorThickness],
+  ].forEach(([x, y]) => {
+    const ramp = new Wall(x, y, rampThickness, rampThickness, { angle: PI / 4 })
+    // bodies.push(ramp)
+    // arenaBodies.ramps.push(ramp)
+    arenaBods.push(ramp)
+  })
 
-  // Right Wall
-  addBody(new Wall(width - halfThickness, height / 2, thickness, height))
+  // Build Goals
+  ;[
+    [goalThickness / 2, height / 2],
+    [width - goalThickness / 2, height / 2],
+  ].forEach(([x, y]) => {
+    const goal = new Wall(x, y, goalThickness, goalWidth)
+    // bodies.push(goal)
+    // arenaBodies.goals.push(goal)
+    arenaBods.push(goal)
+  })
 
-  // Ground
-  addBody(new Wall(width / 2, height - halfThickness, width, thickness))
+  // The walls are rectangles in the for corners of the screen.
+  // The space between the top and bottom rects is the goalWidth.
+  const wallHeight = (height - goalWidth) / 2
 
-  // Ceiling
-  addBody(new Wall(width / 2, halfThickness, width, thickness))
+  // Build Walls
+  ;[
+    [wallThickness / 2, wallHeight / 2],
+    [wallThickness / 2, height - wallHeight / 2],
+    [width - wallThickness / 2, wallHeight / 2],
+    [width - wallThickness / 2, height - wallHeight / 2],
+  ].forEach(([x, y]) => {
+    const wall = new Wall(x, y, wallThickness, wallHeight)
+    // bodies.push(wall)
+    // arenaBodies.walls.push(wall)
+    arenaBods.push(wall)
+  })
 
-  // Left Ramp
-  addBody(new Wall(100, height - 100, 400, thickness, { angle: PI / 4 }))
-
-  // Right Ramp
-  addBody(
-    new Wall(width - 100, height - 100, 400, thickness, {
-      angle: -PI / 4,
-    }),
+  // Build Ceiling
+  arenaBods.push(
+    new Wall(width / 2, ceilingThickness / 2, width, ceilingThickness),
   )
+
+  // Build Floor
+  arenaBods.push(
+    new Wall(width / 2, height - floorThickness / 2, width, floorThickness),
+  )
+}
+
+function removeArenaBodies() {
+  arenaBods.forEach(body => body.remove())
+  arenaBods = []
+}
+
+// Receive newArenaConfig from Socket
+function updateArenaBodies(newArenaConfig) {
+  config.arena = newArenaConfig
+  removeArenaBodies()
+  createArenaBodies()
 }
 
 function keyPressed() {
@@ -145,6 +180,19 @@ function keyPressed() {
   // A
   if (keyCode === 65) {
     body.buttons.rotateLeft += 1
+  }
+
+  // Enter
+  if (keyCode === ENTER) {
+    // This tests the updateArena socket function
+    updateArenaBodies({
+      ceilingThickness: 50,
+      floorThickness: 50,
+      goalThickness: 50,
+      goalWidth: 300,
+      rampThickness: 400,
+      wallThickness: 500,
+    })
   }
 }
 

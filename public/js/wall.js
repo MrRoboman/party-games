@@ -38,4 +38,8 @@ class Wall {
     rect(0, 0, this.w, this.h)
     pop()
   }
+
+  remove() {
+    Matter.World.remove(world, this.body)
+  }
 }

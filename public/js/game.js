@@ -27,7 +27,9 @@ function setupSocket() {
 function setup() {
   setupSocket()
 
-  createCanvas(800, 600)
+  const w = windowWidth
+  const h = (w * 9) / 16
+  createCanvas(w, h)
   rectMode(CENTER)
   ellipseMode(RADIUS)
 

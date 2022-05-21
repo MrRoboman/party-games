@@ -3,7 +3,7 @@ class GameState {
   input() {}
   update() {}
   draw() {
-    background(120)
+    background(80)
     drawBodies()
   }
   end() {}

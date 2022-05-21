@@ -1,3 +1,4 @@
+const numPlayers = 2
 let config = {
   arena: {
     ceilingThickness: 50,
@@ -7,7 +8,48 @@ let config = {
     rampThickness: 200,
     wallThickness: 200,
   },
-  players: [{ startPosition: { x: 0.25, y: 0.8 } }],
+  players: [
+    { fill: 'crimson', startPosition: { x: 0.25, y: 0.8 } },
+    { fill: 'aqua', startPosition: { x: 0.75, y: 0.8 } },
+  ],
+  keyboardControls: {
+    // Player 1 UP
+    // W
+    87: {
+      player: 0,
+      action: 'up',
+    },
+    // Player 1 LEFT
+    // A
+    65: {
+      player: 0,
+      action: 'left',
+    },
+    // Player 1 RIGHT
+    // D
+    68: {
+      player: 0,
+      action: 'right',
+    },
+    // Player 2 UP
+    // up arrow
+    38: {
+      player: 1,
+      action: 'up',
+    },
+    // Player 2 LEFT
+    // left arrow
+    37: {
+      player: 1,
+      action: 'left',
+    },
+    // Player 2 RIGHT
+    // right arrow
+    39: {
+      player: 1,
+      action: 'right',
+    },
+  },
 }
 
 let socket
@@ -21,7 +63,8 @@ let gameState
 let world, engine
 let bodies = []
 let arenaBods = []
-let box
+let players = []
+// let box
 let ball
 let leftGoal
 let rightGoal
@@ -35,6 +78,13 @@ function setupSocket() {
     body.buttons.up = up ? 1 : 0
     body.buttons.left = left ? 1 : 0
     body.buttons.right = right ? 1 : 0
+  })
+
+  // wip
+  socket.on('buttonsPressed', buttonsPressed => {
+    buttonsPressed.forEach((pressed, idx) => {
+      players[idx].buttons = pressed
+    })
   })
 }
 
@@ -55,15 +105,22 @@ function setup() {
   createArenaBodies()
 
   // Box
-  box = addBody(
-    new Box(
-      width / 4,
-      height - config.arena.floorThickness - 100,
-      100,
-      100,
-      {},
-    ),
-  )
+  // box = addBody(
+  //   new Box(
+  //     width / 4,
+  //     height - config.arena.floorThickness - 100,
+  //     100,
+  //     100,
+  //     {},
+  //   ),
+  // )
+  for (let i = 0; i < numPlayers; i++) {
+    const { fill, startPosition } = config.players[i]
+    const { x, y } = startPosition
+    const box = new Box(width * x, height * y, 100, 100, {})
+    box.fill = fill
+    players.push(box)
+  }
   ball = addBody(
     new Ball(width / 2, height / 2 - 200, 50, {
       inertia: Infinity,
@@ -97,6 +154,7 @@ function addBody(newBody) {
 
 function drawBodies() {
   arenaBods.forEach(body => body.show())
+  players.forEach(body => body.show())
   bodies.forEach(body => body.show())
 }
 
@@ -131,6 +189,7 @@ function createArenaBodies() {
     const goal = new Wall(x, y, goalThickness, goalWidth)
     // bodies.push(goal)
     // arenaBodies.goals.push(goal)
+    goal.fill = config.players[idx].fill
     arenaBods.push(goal)
 
     if (idx === 0) {
@@ -189,25 +248,30 @@ function isCollisionBetweenBodies({ bodyA, bodyB }, body1, body2) {
 }
 
 function keyPressed() {
-  if (keyCode === UP_ARROW) {
-    box.buttons.up += 1
-  }
-  if (keyCode === LEFT_ARROW) {
-    box.buttons.left += 1
-  }
-  if (keyCode === RIGHT_ARROW) {
-    box.buttons.right += 1
+  if (config.keyboardControls[keyCode]) {
+    const { player, action } = config.keyboardControls[keyCode]
+    players[player].buttons[action] += 1
   }
 
-  // D
-  if (keyCode === 68) {
-    box.buttons.rotateRight += 1
-  }
+  // if (keyCode === UP_ARROW) {
+  //   box.buttons.up += 1
+  // }
+  // if (keyCode === LEFT_ARROW) {
+  //   box.buttons.left += 1
+  // }
+  // if (keyCode === RIGHT_ARROW) {
+  //   box.buttons.right += 1
+  // }
 
-  // A
-  if (keyCode === 65) {
-    box.buttons.rotateLeft += 1
-  }
+  // // D
+  // if (keyCode === 68) {
+  //   box.buttons.rotateRight += 1
+  // }
+
+  // // A
+  // if (keyCode === 65) {
+  //   box.buttons.rotateLeft += 1
+  // }
 
   // Enter
   if (keyCode === ENTER) {
@@ -224,23 +288,28 @@ function keyPressed() {
 }
 
 function keyReleased() {
-  if (keyCode === UP_ARROW) {
-    box.buttons.up -= 1
-  }
-  if (keyCode === LEFT_ARROW) {
-    box.buttons.left -= 1
-  }
-  if (keyCode === RIGHT_ARROW) {
-    box.buttons.right -= 1
+  if (config.keyboardControls[keyCode]) {
+    const { player, action } = config.keyboardControls[keyCode]
+    players[player].buttons[action] -= 1
   }
 
-  // D
-  if (keyCode === 68) {
-    box.buttons.rotateRight -= 1
-  }
+  // if (keyCode === UP_ARROW) {
+  //   box.buttons.up -= 1
+  // }
+  // if (keyCode === LEFT_ARROW) {
+  //   box.buttons.left -= 1
+  // }
+  // if (keyCode === RIGHT_ARROW) {
+  //   box.buttons.right -= 1
+  // }
 
-  // A
-  if (keyCode === 65) {
-    box.buttons.rotateLeft -= 1
-  }
+  // // D
+  // if (keyCode === 68) {
+  //   box.buttons.rotateRight -= 1
+  // }
+
+  // // A
+  // if (keyCode === 65) {
+  //   box.buttons.rotateLeft -= 1
+  // }
 }

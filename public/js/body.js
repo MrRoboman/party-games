@@ -1,9 +1,6 @@
 class Body {
   constructor() {
-    // this.w = w
-    // this.h = h
-    // this.body = Matter.Bodies.rectangle(x, y, w, h, options)
-    // Matter.World.add(world, this.body)
+    this.fill = 'mistyrose'
   }
 
   reset(x, y) {
@@ -38,7 +35,7 @@ class Body {
   }
 
   show() {
-    fill('pink')
+    fill(this.fill)
     stroke(0)
     strokeWeight(2)
 

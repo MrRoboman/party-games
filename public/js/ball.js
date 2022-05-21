@@ -9,7 +9,7 @@ class Ball extends Body {
   }
 
   show() {
-    fill('pink')
+    fill(this.fill)
     stroke(0)
     strokeWeight(2)
 

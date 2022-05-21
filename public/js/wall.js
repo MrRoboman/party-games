@@ -1,5 +1,7 @@
-class Wall {
+class Wall extends Body {
   constructor(x, y, w, h, options = {}) {
+    super()
+
     this.w = w
     this.h = h
 
@@ -7,28 +9,13 @@ class Wall {
       isStatic: true,
       ...options,
     }
+
     this.body = Matter.Bodies.rectangle(x, y, w, h, options)
     Matter.World.add(world, this.body)
   }
 
-  get x() {
-    return this.body.position.x
-  }
-
-  get y() {
-    return this.body.position.y
-  }
-
-  get angle() {
-    return this.body.angle
-  }
-
-  set angle(newAngle) {
-    Matter.Body.setAngle(this.body, newAngle)
-  }
-
   show() {
-    fill('pink')
+    fill(this.fill)
     stroke(0)
     strokeWeight(2)
 

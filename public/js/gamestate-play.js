@@ -4,7 +4,7 @@ class GameStatePlay extends GameState {
   }
 
   input() {
-    box && box.input()
+    players.forEach(player => player.input())
   }
 
   update() {

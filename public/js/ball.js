@@ -1,21 +1,11 @@
-class Ball {
+class Ball extends Body {
   constructor(x, y, r, options = {}) {
+    super()
+
     this.r = r
 
     this.body = Matter.Bodies.circle(x, y, r, options)
     Matter.World.add(world, this.body)
-
-    // for (const key in options) {
-    //   this.body[key] = options[key]
-    // }
-  }
-
-  get x() {
-    return this.body.position.x
-  }
-
-  get y() {
-    return this.body.position.y
   }
 
   show() {

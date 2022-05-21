@@ -11,6 +11,12 @@ let config = {
 
 let socket
 
+// Game States
+const GAME_STATE_START = 1
+const GAME_STATE_PLAY = 2
+const GAME_STATE_GOAL = 3
+let gameState
+
 let world, engine
 let bodies = []
 let arenaBods = []
@@ -66,15 +72,26 @@ function setup() {
       density: 0.0005,
     }),
   )
+
+  changeState(new GameStateStart())
 }
 
 function draw() {
-  body.input()
+  gameState.input()
+  gameState.update()
+  gameState.draw()
+  // body.input()
 
-  Matter.Engine.update(engine)
+  // Matter.Engine.update(engine)
 
-  background(120)
-  drawBodies()
+  // background(120)
+  // drawBodies()
+}
+
+function changeState(nextState) {
+  gameState && gameState.end()
+  gameState = nextState
+  gameState.start()
 }
 
 function addBody(newBody) {

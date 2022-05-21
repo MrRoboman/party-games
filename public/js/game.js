@@ -1,5 +1,17 @@
 let socket
 
+let config = {
+  arena: {
+    ceilingThickness: 50,
+    floorThickness: 50,
+    goalThickness: 50,
+    goalWidth: 100,
+    wallThickness: 100,
+  },
+}
+
+function buildArena() {}
+
 let world, engine
 let bodies = []
 let body
@@ -91,35 +103,24 @@ function buildWalls() {
   const thickness = 50
   const halfThickness = thickness / 2
 
-  const options = {
-    isStatic: true,
-    // friction: 0.2,
-    // restitution: 1,
-  }
-
   // Left Wall
-  addBody(new Box(halfThickness, height / 2, thickness, height, options))
+  addBody(new Wall(halfThickness, height / 2, thickness, height))
 
   // Right Wall
-  addBody(
-    new Box(width - halfThickness, height / 2, thickness, height, options),
-  )
+  addBody(new Wall(width - halfThickness, height / 2, thickness, height))
 
   // Ground
-  addBody(new Box(width / 2, height - halfThickness, width, thickness, options))
+  addBody(new Wall(width / 2, height - halfThickness, width, thickness))
 
   // Ceiling
-  addBody(new Box(width / 2, halfThickness, width, thickness, options))
+  addBody(new Wall(width / 2, halfThickness, width, thickness))
 
   // Left Ramp
-  addBody(
-    new Box(100, height - 100, 400, thickness, { ...options, angle: PI / 4 }),
-  )
+  addBody(new Wall(100, height - 100, 400, thickness, { angle: PI / 4 }))
 
   // Right Ramp
   addBody(
-    new Box(width - 100, height - 100, 400, thickness, {
-      ...options,
+    new Wall(width - 100, height - 100, 400, thickness, {
       angle: -PI / 4,
     }),
   )

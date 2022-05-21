@@ -7,6 +7,7 @@ let config = {
     rampThickness: 200,
     wallThickness: 200,
   },
+  players: [{ startPosition: { x: 0.25, y: 0.8 } }],
 }
 
 let socket
@@ -20,8 +21,10 @@ let gameState
 let world, engine
 let bodies = []
 let arenaBods = []
-let body
+let box
 let ball
+let leftGoal
+let rightGoal
 
 function setupSocket() {
   socket = io()
@@ -52,7 +55,7 @@ function setup() {
   createArenaBodies()
 
   // Box
-  body = addBody(
+  box = addBody(
     new Box(
       width / 4,
       height - config.arena.floorThickness - 100,
@@ -61,7 +64,6 @@ function setup() {
       {},
     ),
   )
-  // Box
   ball = addBody(
     new Ball(width / 2, height / 2 - 200, 50, {
       inertia: Infinity,
@@ -80,12 +82,6 @@ function draw() {
   gameState.input()
   gameState.update()
   gameState.draw()
-  // body.input()
-
-  // Matter.Engine.update(engine)
-
-  // background(120)
-  // drawBodies()
 }
 
 function changeState(nextState) {
@@ -131,11 +127,17 @@ function createArenaBodies() {
   ;[
     [goalThickness / 2, height / 2],
     [width - goalThickness / 2, height / 2],
-  ].forEach(([x, y]) => {
+  ].forEach(([x, y], idx) => {
     const goal = new Wall(x, y, goalThickness, goalWidth)
     // bodies.push(goal)
     // arenaBodies.goals.push(goal)
     arenaBods.push(goal)
+
+    if (idx === 0) {
+      leftGoal = goal
+    } else {
+      rightGoal = goal
+    }
   })
 
   // The walls are rectangles in the for corners of the screen.
@@ -169,6 +171,8 @@ function createArenaBodies() {
 function removeArenaBodies() {
   arenaBods.forEach(body => body.remove())
   arenaBods = []
+  leftGoal = null
+  rightGoal = null
 }
 
 // Receive newArenaConfig from Socket
@@ -178,25 +182,31 @@ function updateArenaBodies(newArenaConfig) {
   createArenaBodies()
 }
 
+function isCollisionBetweenBodies({ bodyA, bodyB }, body1, body2) {
+  const bodyOrder1 = bodyA === body1.body && bodyB === body2.body
+  const bodyOrder2 = bodyA === body2.body && bodyB === body1.body
+  return bodyOrder1 || bodyOrder2
+}
+
 function keyPressed() {
   if (keyCode === UP_ARROW) {
-    body.buttons.up += 1
+    box.buttons.up += 1
   }
   if (keyCode === LEFT_ARROW) {
-    body.buttons.left += 1
+    box.buttons.left += 1
   }
   if (keyCode === RIGHT_ARROW) {
-    body.buttons.right += 1
+    box.buttons.right += 1
   }
 
   // D
   if (keyCode === 68) {
-    body.buttons.rotateRight += 1
+    box.buttons.rotateRight += 1
   }
 
   // A
   if (keyCode === 65) {
-    body.buttons.rotateLeft += 1
+    box.buttons.rotateLeft += 1
   }
 
   // Enter
@@ -215,22 +225,22 @@ function keyPressed() {
 
 function keyReleased() {
   if (keyCode === UP_ARROW) {
-    body.buttons.up -= 1
+    box.buttons.up -= 1
   }
   if (keyCode === LEFT_ARROW) {
-    body.buttons.left -= 1
+    box.buttons.left -= 1
   }
   if (keyCode === RIGHT_ARROW) {
-    body.buttons.right -= 1
+    box.buttons.right -= 1
   }
 
   // D
   if (keyCode === 68) {
-    body.buttons.rotateRight -= 1
+    box.buttons.rotateRight -= 1
   }
 
   // A
   if (keyCode === 65) {
-    body.buttons.rotateLeft -= 1
+    box.buttons.rotateLeft -= 1
   }
 }

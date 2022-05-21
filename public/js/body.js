@@ -6,6 +6,13 @@ class Body {
     // Matter.World.add(world, this.body)
   }
 
+  reset(x, y) {
+    Matter.Body.setPosition(this.body, { x, y })
+    Matter.Body.setAngle(this.body, 0)
+    Matter.Body.setVelocity(this.body, { x: 0, y: 0 })
+    Matter.Body.setAngularVelocity(this.body, 0)
+  }
+
   get x() {
     return this.body.position.x
   }

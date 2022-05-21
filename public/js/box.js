@@ -1,5 +1,7 @@
-class Box {
+class Box extends Body {
   constructor(x, y, w, h, options = {}) {
+    super()
+
     this.thrust = 0.012
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
@@ -17,22 +19,6 @@ class Box {
 
     this.body = Matter.Bodies.rectangle(x, y, w, h, options)
     Matter.World.add(world, this.body)
-
-    // for (const key in options) {
-    //   this.body[key] = options[key]
-    // }
-  }
-
-  get x() {
-    return this.body.position.x
-  }
-
-  get y() {
-    return this.body.position.y
-  }
-
-  get angle() {
-    return this.body.angle
   }
 
   input() {

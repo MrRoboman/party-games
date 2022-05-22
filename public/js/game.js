@@ -72,18 +72,18 @@ let rightGoal
 function setupSocket() {
   socket = io()
 
-  socket.emit('gameClient')
-
-  socket.on('buttons', ([up, left, right]) => {
-    body.buttons.up = up ? 1 : 0
-    body.buttons.left = left ? 1 : 0
-    body.buttons.right = right ? 1 : 0
+  socket.on('who are you', () => {
+    socket.emit('gameClient')
   })
 
-  // wip
-  socket.on('buttonsPressed', buttonsPressed => {
-    buttonsPressed.forEach((pressed, idx) => {
-      players[idx].buttons = pressed
+  // socket.on('buttons', allButtons => {
+  //   players.forEach((player, idx) => {
+  //     player.buttons = allButtons[idx]
+  //   })
+  // })
+  socket.on('buttons', allButtons => {
+    allButtons.forEach((buttons, idx) => {
+      players[idx].buttons = buttons
     })
   })
 }

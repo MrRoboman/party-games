@@ -8,6 +8,7 @@ const io = new Server(server)
 
 const gameClients = {}
 const players = {}
+const playerList = []
 const velocity = { x: 0, y: 0 }
 
 const buttons = [false, false, false]
@@ -24,13 +25,14 @@ app.get('/controller/', function (req, res) {
 
 io.on('connection', function (socket) {
   console.log('a user connected')
+  socket.emit('who are you')
 
   // create a new player and add it to our players object
   // players[socket.id] = {
   //   rotation: 0,
   //   x: 100,
   //   y: 100,
-  //   playerId: socket.id,
+  //   socketId: socket.id,
   // }
   // socket.emit('currentPlayers', players)
   // socket.broadcast.emit('newPlayer', players[socket.id])
@@ -42,11 +44,13 @@ io.on('connection', function (socket) {
   })
 
   socket.on('controllerClient', () => {
-    players[socket.id] = {
-      x: 100,
-      y: 100,
-      playerId: socket.id,
+    const player = {
+      socketId: socket.id,
+      buttons: [0, 0, 0],
     }
+
+    players[socket.id] = player
+    playerList.push(player)
 
     for (const id in gameClients) {
       gameClients[id].emit('currentPlayers', players)
@@ -57,6 +61,13 @@ io.on('connection', function (socket) {
     console.log('user disconnected')
 
     delete players[socket.id]
+    for (let i = 0; i < playerList.length; i++) {
+      const player = playerList[i]
+      if (socket.id === player.socketId) {
+        playerList.splice(i, 1)
+        break
+      }
+    }
     io.emit('playerDisconnect', socket.id)
   })
 
@@ -68,14 +79,16 @@ io.on('connection', function (socket) {
     }
   })
 
-  socket.on('button', buttons => {
+  socket.on('buttons', buttons => {
     // console.log('touches', touches) // eslint-disable-line
     // console.log('button:', buttonIdx, pressed)
     // buttons[buttonIdx] = pressed
+    console.log(buttons) // eslint-disable-line
+    players[socket.id].buttons = buttons
+    const allButtons = playerList.map(p => p.buttons)
     for (const id in gameClients) {
       const game = gameClients[id]
-      // console.log('touches', touches) // eslint-disable-line
-      game.emit('buttons', buttons)
+      game.emit('buttons', allButtons)
     }
   })
 })

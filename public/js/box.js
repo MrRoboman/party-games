@@ -6,13 +6,14 @@ class Box extends Body {
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
 
-    this.buttons = {
-      up: 0,
-      left: 0,
-      right: 0,
-      rotateRight: 0,
-      rotateLeft: 0,
-    }
+    // this.buttons = {
+    //   up: 0,
+    //   left: 0,
+    //   right: 0,
+    // rotateRight: 0,
+    // rotateLeft: 0,
+    // }
+    this.buttons = [0, 0, 0]
 
     this.w = w
     this.h = h
@@ -23,11 +24,11 @@ class Box extends Body {
 
   input() {
     const mult = 1 // for testing
-    this.up(this.buttons.up * mult)
-    this.left(this.buttons.left * mult)
-    this.right(this.buttons.right * mult)
-    this.rotateRight(this.buttons.rotateRight * mult)
-    this.rotateLeft(this.buttons.rotateLeft * mult)
+    this.up(this.buttons[0] * mult)
+    this.left(this.buttons[1] * mult)
+    this.right(this.buttons[2] * mult)
+    // this.rotateRight(this.buttons.rotateRight * mult)
+    // this.rotateLeft(this.buttons.rotateLeft * mult)
   }
 
   up(multiplier = 1) {

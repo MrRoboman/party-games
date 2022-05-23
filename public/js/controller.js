@@ -1,5 +1,6 @@
-let debug = true
+let debug = false
 let touchareas = []
+let fillColor = 120
 
 function createTouchArea(x, y, w, h, buttonIdx) {
   touchareas.push({
@@ -33,6 +34,11 @@ function setupSocket() {
   socket.on('uuid', uuid => {
     localStorage.setItem('uuid', uuid)
   })
+
+  socket.on('fill', _fill => {
+    fillColor = _fill
+    drawControls()
+  })
 }
 
 function setup() {
@@ -60,25 +66,7 @@ function setup() {
     },
   }
 
-  push()
-  translate(width * 0.5, height * 0.2)
-  // drawButton()
-  rotate(-PI / 2)
-  drawArrow()
-  pop()
-
-  push()
-  translate(width * 0.25, height * 0.5)
-  // drawButton()
-  rotate(-PI)
-  drawArrow()
-  pop()
-
-  push()
-  translate(width * 0.75, height * 0.5)
-  // drawButton()
-  drawArrow()
-  pop()
+  drawControls()
 
   createTouchArea(width * 0.5, height * 0.2, 600, 400, 0)
   createTouchArea(width * 0.25, height * 0.5, 400, 400, 1)
@@ -93,6 +81,30 @@ function setup() {
       rect(x, y, w, h)
     })
   }
+}
+
+function drawControls(redraw = false) {
+  background(fillColor)
+
+  push()
+  translate(width * 0.5, height * 0.2)
+  // drawButton()
+  rotate(-PI / 2)
+  drawArrow(redraw)
+  pop()
+
+  push()
+  translate(width * 0.25, height * 0.5)
+  // drawButton()
+  rotate(-PI)
+  drawArrow(redraw)
+  pop()
+
+  push()
+  translate(width * 0.75, height * 0.5)
+  // drawButton()
+  drawArrow(redraw)
+  pop()
 }
 
 function draw() {

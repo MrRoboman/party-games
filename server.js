@@ -75,6 +75,13 @@ io.on('connection', function (socket) {
       })
     }
 
+    // Tell the player controller what color they are
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].uuid === uuid) {
+        players[i].socket.emit('fill', config.players[i].fill)
+      }
+    }
+
     updateGameClientsOnPlayers()
   })
 

@@ -1,6 +1,6 @@
 class Box extends Body {
   constructor(x, y, w, h, options = {}) {
-    super()
+    super(x, y)
 
     this.thrust = 0.012
     this.thrustLateral = 0.005
@@ -93,6 +93,8 @@ class Box extends Body {
   }
 
   show() {
+    if (!this.isActive) return
+
     fill(this.fill)
     stroke(0)
     strokeWeight(2)

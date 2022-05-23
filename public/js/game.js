@@ -84,11 +84,20 @@ function setupSocket() {
     localStorage.setItem('uuid', uuid)
   })
 
-  // socket.on('buttons', allButtons => {
-  //   players.forEach((player, idx) => {
-  //     player.buttons = allButtons[idx]
-  //   })
-  // })
+  socket.on('players', serverPlayers => {
+    console.log({ serverPlayers }) // eslint-disable-line
+    serverPlayers.forEach(({ isActive, fill, startPosition }, idx) => {
+      if (!players[idx]) {
+        const { x, y } = startPosition
+        const box = new Box(width * x, height * y, 100, 100)
+        box.fill = fill
+        players.push(box)
+      }
+
+      players[idx].active = isActive
+    })
+  })
+
   socket.on('buttons', allButtons => {
     console.log({ allButtons }) // eslint-disable-line
     allButtons.forEach((buttons, idx) => {
@@ -123,13 +132,7 @@ function setup() {
   //     {},
   //   ),
   // )
-  for (let i = 0; i < numPlayers; i++) {
-    const { fill, startPosition } = config.players[i]
-    const { x, y } = startPosition
-    const box = new Box(width * x, height * y, 100, 100, {})
-    box.fill = fill
-    players.push(box)
-  }
+
   ball = addBody(
     new Ball(width / 2, height / 2 - 200, 50, {
       inertia: Infinity,

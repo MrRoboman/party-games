@@ -1,5 +1,7 @@
 // https://gamedevacademy.org/create-a-basic-multiplayer-game-in-phaser-3-with-socket-io-part-1/
 
+const config = require('./public/js/server-config.json')
+
 const express = require('express')
 const app = express()
 const server = require('http').Server(app)
@@ -48,11 +50,8 @@ io.on('connection', function (socket) {
   })
 
   socket.on('controllerClient', uuid => {
-    console.log('on controllerClient')
-    console.log(uuid) // eslint-disable-line
     if (!uuid) {
       uuid = generateUUID()
-      console.log({ emit: uuid }) // eslint-disable-line
       socket.emit('uuid', uuid)
     }
 
@@ -124,7 +123,11 @@ io.on('connection', function (socket) {
 })
 
 function getPlayersForGameClient() {
-  return players.map(({ isActive }) => isActive)
+  return players.map(({ isActive }, idx) => ({
+    isActive,
+    fill: config.players[idx].fill,
+    startPosition: config.players[idx].startPosition,
+  }))
 }
 
 function updateGameClientsOnPlayers() {

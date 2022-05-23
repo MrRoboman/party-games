@@ -1,6 +1,6 @@
 class Wall extends Body {
   constructor(x, y, w, h, options = {}) {
-    super()
+    super(x, y)
 
     this.w = w
     this.h = h

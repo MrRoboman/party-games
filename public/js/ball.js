@@ -1,6 +1,6 @@
 class Ball extends Body {
   constructor(x, y, r, options = {}) {
-    super()
+    super(x, y)
 
     this.r = r
 

@@ -87,6 +87,7 @@ function setupSocket() {
   //   })
   // })
   socket.on('buttons', allButtons => {
+    console.log({ allButtons }) // eslint-disable-line
     allButtons.forEach((buttons, idx) => {
       players[idx].buttons = buttons
     })

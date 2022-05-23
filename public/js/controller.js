@@ -41,6 +41,8 @@ function setup() {
   rectMode(CENTER)
   noSmooth()
 
+  setupSocket()
+
   drawings = {
     scale: 1,
     button: {
@@ -57,7 +59,7 @@ function setup() {
       _bodyWidthPercent: 0.6,
     },
   }
-  rect(0, 0, width * 2, height * 0.73)
+
   push()
   translate(width * 0.5, height * 0.2)
   // drawButton()
@@ -77,25 +79,13 @@ function setup() {
   // drawButton()
   drawArrow()
   pop()
-  // drawings = {
-  //   arrow: {
-  //     _width: 100,
-  //     _height: 100,
-  //     _strokeWeight: 8,
-  //     _headLengthPercent: 0.2,
-  //     _bodyWidthPercent: 0.6,
-  //   },
-  // }
 
-  // translate(width * 0.75, height / 2)
-  // scale(4, 4)
-  // // rotate(-PI)
-  // drawArrow()
-  setupSocket()
-
-  createTouchArea(width / 2, height * 0.2, 475, 475, 0)
-  createTouchArea(width * 0.25, height * 0.5, 475, 475, 1)
-  createTouchArea(width * 0.75, height * 0.5, 475, 475, 2)
+  createTouchArea(width * 0.5, height * 0.2, 600, 400, 0)
+  createTouchArea(width * 0.25, height * 0.5, 400, 400, 1)
+  createTouchArea(width * 0.75, height * 0.5, 400, 400, 2)
+  // createTouchArea(220, 80, 500, 560, 0)
+  // createTouchArea(width * 0.25, height * 0.5, 475, 475, 1)
+  // createTouchArea(width * 0.75, height * 0.5, 475, 475, 2)
 
   if (debug) {
     touchareas.forEach(({ x, y, w, h }) => {
@@ -209,14 +199,16 @@ function touchStarted() {
   // console.log(Math.floor(mouseY / buttonHeight)) // eslint-disable-line
   const newTouches = touches.filter(touch => !oldTouchesById[touch.id])
   newTouches.forEach(touch => {
-    const buttonIdx = (oldTouchesById[touch.id] = {
+    // socket.emit('touch', [touch.x, touch.y])
+    oldTouchesById[touch.id] = {
       buttonIdx: getButtonIdx(touch.x, touch.y),
-    })
+    }
   })
   // const buttonIdx = Math.floor(mouseY / buttonHeight)
   buttons = [0, 0, 0]
   for (const touchId in oldTouchesById) {
     const { buttonIdx } = oldTouchesById[touchId]
+    // socket.emit('touch', buttonIdx)
     if (buttonIdx > -1) {
       buttons[buttonIdx] = 1
     }
@@ -248,9 +240,28 @@ function touchEnded() {
 }
 
 function getButtonIdx(_x, _y) {
+  // for (let i = 0; i < touchareas.length; i++) {
+  // const { x, y, w, h, buttonIdx } = touchareas[i]
+  // if (_x >= x && _x <= x + w && _y >= y && _y <= y + h) {
+  // return buttonIdx
+  // }
+  // }
   for (let i = 0; i < touchareas.length; i++) {
     const { x, y, w, h, buttonIdx } = touchareas[i]
-    if (_x >= x && _x <= x + w && _y >= y && _y <= y + h) {
+    // socket.emit('touch', {
+    //   x: width * 0.5,
+    //   y: height * 0.2,
+    //   w: 400,
+    //   h: 400,
+    //   touch: [_x, _y],
+    //   wtf: [_x >= x - w / 2, _x <= x + w / 2, _y >= y - h / 2, _y <= y + h / 2],
+    // })
+    if (
+      _x >= x - w / 2 &&
+      _x <= x + w / 2 &&
+      _y >= y - h / 2 &&
+      _y <= y + h / 2
+    ) {
       return buttonIdx
     }
   }

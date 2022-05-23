@@ -102,8 +102,24 @@ io.on('connection', function (socket) {
     updateGameClientsOnPlayers()
   })
 
+  socket.on('touch', touch => {
+    console.log({ touch }) // eslint-disable-line
+  })
+
   socket.on('buttons', buttons => {
     console.log(buttons) // eslint-disable-line
+    players.forEach(player => {
+      if (player.socket.id === socket.id) {
+        player.buttons = buttons
+      }
+    })
+
+    const allButtons = players.map(p => p.buttons)
+
+    for (const id in gameClients) {
+      const game = gameClients[id]
+      game.socket.emit('buttons', allButtons)
+    }
   })
 })
 

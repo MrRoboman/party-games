@@ -5,9 +5,10 @@ const app = express()
 const server = require('http').Server(app)
 const { Server } = require('socket.io')
 const io = new Server(server)
+const { v4: generateUUID } = require('uuid')
 
 const gameClients = {}
-const players = {}
+const players = []
 const playerList = []
 const velocity = { x: 0, y: 0 }
 
@@ -24,74 +25,98 @@ app.get('/controller/', function (req, res) {
 })
 
 io.on('connection', function (socket) {
-  console.log('a user connected')
-  socket.emit('who are you')
+  console.log('New Connection')
+  socket.emit('identify yourself')
 
-  // create a new player and add it to our players object
-  // players[socket.id] = {
-  //   rotation: 0,
-  //   x: 100,
-  //   y: 100,
-  //   socketId: socket.id,
-  // }
-  // socket.emit('currentPlayers', players)
-  // socket.broadcast.emit('newPlayer', players[socket.id])
-
-  socket.on('gameClient', () => {
+  socket.on('gameClient', uuid => {
     console.log('Game Client Joined')
-    gameClients[socket.id] = socket
-    socket.emit('currentPlayers', players)
+
+    if (!uuid) {
+      uuid = generateUUID()
+      socket.emit('uuid', uuid)
+    }
+
+    gameClients[uuid] = {
+      isActive: true,
+      socket,
+      uuid,
+    }
+
+    updateGameClientsOnPlayers()
+    // Update about current players
+    // socket.emit('currentPlayers', players)
   })
 
-  socket.on('controllerClient', () => {
-    const player = {
-      socketId: socket.id,
-      buttons: [0, 0, 0],
+  socket.on('controllerClient', uuid => {
+    console.log('on controllerClient')
+    console.log(uuid) // eslint-disable-line
+    if (!uuid) {
+      uuid = generateUUID()
+      console.log({ emit: uuid }) // eslint-disable-line
+      socket.emit('uuid', uuid)
     }
 
-    players[socket.id] = player
-    playerList.push(player)
+    let isNewPlayer = true
 
-    for (const id in gameClients) {
-      gameClients[id].emit('currentPlayers', players)
+    players.forEach(player => {
+      if (player.uuid === uuid) {
+        player.isActive = true
+        player.socket = socket
+
+        isNewPlayer = false
+      }
+    })
+
+    if (isNewPlayer) {
+      players.push({
+        buttons: [0, 0, 0],
+        isActive: true,
+        socket,
+        uuid,
+      })
     }
+
+    updateGameClientsOnPlayers()
   })
 
   socket.on('disconnect', function () {
-    console.log('user disconnected')
+    console.log('Disconnection')
 
-    delete players[socket.id]
-    for (let i = 0; i < playerList.length; i++) {
-      const player = playerList[i]
-      if (socket.id === player.socketId) {
-        playerList.splice(i, 1)
+    console.log({ theSocket: socket.id }) // eslint-disable-line
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i]
+      console.log({ plaSocket: player.socket.id }) // eslint-disable-line
+      if (player.socket.id === socket.id) {
+        player.isActive = false
         break
       }
     }
-    io.emit('playerDisconnect', socket.id)
-  })
 
-  socket.on('control', ({ x, y }) => {
-    console.log(socket.id, { x, y }) // eslint-disable-line
-    for (const id in gameClients) {
+    Object.keys(gameClients).forEach(id => {
       const game = gameClients[id]
-      game.emit('velocity', { x, y })
-    }
+      if (game.socket.id === socket.id) {
+        game.isActive = false
+      }
+    })
+
+    updateGameClientsOnPlayers()
   })
 
   socket.on('buttons', buttons => {
-    // console.log('touches', touches) // eslint-disable-line
-    // console.log('button:', buttonIdx, pressed)
-    // buttons[buttonIdx] = pressed
     console.log(buttons) // eslint-disable-line
-    players[socket.id].buttons = buttons
-    const allButtons = playerList.map(p => p.buttons)
-    for (const id in gameClients) {
-      const game = gameClients[id]
-      game.emit('buttons', allButtons)
-    }
   })
 })
+
+function getPlayersForGameClient() {
+  return players.map(({ isActive }) => isActive)
+}
+
+function updateGameClientsOnPlayers() {
+  console.log(getPlayersForGameClient()) // eslint-disable-line
+  for (const id in gameClients) {
+    gameClients[id].socket.emit('players', getPlayersForGameClient())
+  }
+}
 
 server.listen(8081, function () {
   console.log(`Listening on ${server.address().port}`)

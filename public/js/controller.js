@@ -20,13 +20,18 @@ let drawings
 function setupSocket() {
   socket = io()
 
-  socket.on('who are you', () => {
-    socket.emit('controllerClient')
+  socket.on('identify yourself', () => {
+    const uuid = localStorage.getItem('uuid')
+    socket.emit('controllerClient', uuid)
     // console.log({ players }) // eslint-disable-line
     // for (id in players) {
     //   const player = players[id]
     //   circle(player.x, player.y, 50)
     // }
+  })
+
+  socket.on('uuid', uuid => {
+    localStorage.setItem('uuid', uuid)
   })
 }
 

@@ -72,8 +72,13 @@ let rightGoal
 function setupSocket() {
   socket = io()
 
-  socket.on('who are you', () => {
-    socket.emit('gameClient')
+  socket.on('identify yourself', () => {
+    const uuid = localStorage.getItem('uuid')
+    socket.emit('gameClient', uuid)
+  })
+
+  socket.on('uuid', uuid => {
+    localStorage.setItem('uuid', uuid)
   })
 
   // socket.on('buttons', allButtons => {

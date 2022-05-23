@@ -20,37 +20,37 @@ let config = {
     // W
     87: {
       player: 0,
-      action: 'up',
+      action: 0,
     },
     // Player 1 LEFT
     // A
     65: {
       player: 0,
-      action: 'left',
+      action: 1,
     },
     // Player 1 RIGHT
     // D
     68: {
       player: 0,
-      action: 'right',
+      action: 2,
     },
     // Player 2 UP
     // up arrow
     38: {
       player: 1,
-      action: 'up',
+      action: 0,
     },
     // Player 2 LEFT
     // left arrow
     37: {
       player: 1,
-      action: 'left',
+      action: 1,
     },
     // Player 2 RIGHT
     // right arrow
     39: {
       player: 1,
-      action: 'right',
+      action: 2,
     },
   },
 }

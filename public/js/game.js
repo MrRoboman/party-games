@@ -12,6 +12,9 @@ let config = {
     { fill: 'crimson', startPosition: { x: 0.25, y: 0.8 } },
     { fill: 'aqua', startPosition: { x: 0.75, y: 0.8 } },
   ],
+  misc: {
+    boxBallCollisionVelocityMultiplier: 1.2,
+  },
   keyboardControls: {
     // Player 1 UP
     // W

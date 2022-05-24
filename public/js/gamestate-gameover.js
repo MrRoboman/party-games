@@ -1,7 +1,19 @@
 class GameStateGameOver extends GameState {
   start() {
-    // Flash the scores and wait for user input?
-    // If everyone holds the up button then the game starts.
-    setTimeout(() => changeState(new GameStateStart()), 1500)
+    this.lastTimeNotEveryoneWasPushingUp = Date.now()
+  }
+
+  input() {
+    if (players.every(player => player.buttons[0])) {
+      if (this.timeSinceEveryoneStartedPressingUp() >= 2000) {
+        changeState(new GameStateStart())
+      }
+    } else {
+      this.lastTimeNotEveryoneWasPushingUp = Date.now()
+    }
+  }
+
+  timeSinceEveryoneStartedPressingUp() {
+    return Date.now() - this.lastTimeNotEveryoneWasPushingUp
   }
 }

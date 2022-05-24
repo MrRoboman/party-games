@@ -42,11 +42,13 @@ class GameStatePlay extends GameState {
     event.pairs.forEach(pair => {
       if (isCollisionBetweenBodies(pair, ball, leftGoal)) {
         console.log('Left Goal!') // eslint-disable-line
+        scores[1].score++
         changeState(new GameStateGoal())
       }
 
       if (isCollisionBetweenBodies(pair, ball, rightGoal)) {
         console.log('Right Goal!') // eslint-disable-line
+        scores[0].score++
         changeState(new GameStateGoal())
       }
     })

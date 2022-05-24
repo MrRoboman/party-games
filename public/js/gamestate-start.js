@@ -1,7 +1,7 @@
 class GameStateStart extends GameState {
   start() {
     if (timer.complete) {
-      timer.start(10000)
+      reset()
     }
 
     ball && ball.reset(width / 2, height / 2 - 200)

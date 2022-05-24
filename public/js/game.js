@@ -72,6 +72,7 @@ let ball
 let leftGoal
 let rightGoal
 let timer
+let scores = []
 
 function setupSocket() {
   socket = io()
@@ -147,6 +148,9 @@ function setup() {
 
   timer = new Timer()
 
+  scores.push(new Score('crimson', { x: 90, y: 50 }))
+  scores.push(new Score('aqua', { x: width - 90, y: 50 }))
+
   changeState(new GameStateStart())
 }
 
@@ -154,6 +158,11 @@ function draw() {
   gameState.input()
   gameState.update()
   gameState.draw()
+}
+
+function reset() {
+  timer.start(60000)
+  scores.forEach(score => (score.score = 0))
 }
 
 function changeState(nextState) {

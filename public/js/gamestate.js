@@ -6,6 +6,7 @@ class GameState {
     background(80)
     drawBodies()
     timer.show()
+    scores.forEach(score => score.show())
   }
   end() {}
 }

@@ -5,6 +5,7 @@ class GameState {
   draw() {
     background(80)
     drawBodies()
+    timer.show()
   }
   end() {}
 }

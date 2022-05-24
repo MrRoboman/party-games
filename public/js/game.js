@@ -71,6 +71,7 @@ let players = []
 let ball
 let leftGoal
 let rightGoal
+let timer
 
 function setupSocket() {
   socket = io()
@@ -143,6 +144,8 @@ function setup() {
       density: 0.0005,
     }),
   )
+
+  timer = new Timer()
 
   changeState(new GameStateStart())
 }

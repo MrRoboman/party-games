@@ -2,6 +2,8 @@ class GameStatePlay extends GameState {
   start() {
     Matter.Events.on(engine, 'collisionStart', this.checkForGoal)
     Matter.Events.on(engine, 'collisionEnd', this.bounceItHard)
+
+    this.startTime = Date.now()
   }
 
   input() {
@@ -10,6 +12,10 @@ class GameStatePlay extends GameState {
 
   update() {
     Matter.Engine.update(engine) // use deltaTime?
+    timer.update(deltaTime)
+    if (timer.complete) {
+      changeState(new GameStateGameOver())
+    }
   }
 
   end() {

@@ -50,6 +50,7 @@ io.on('connection', function (socket) {
   })
 
   socket.on('controllerClient', uuid => {
+    console.log('Controller Joined')
     if (!uuid) {
       uuid = generateUUID()
       socket.emit('uuid', uuid)

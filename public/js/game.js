@@ -148,8 +148,8 @@ function setup() {
 
   timer = new Timer()
 
-  scores.push(new Score('crimson', { x: 90, y: 50 }))
-  scores.push(new Score('aqua', { x: width - 90, y: 50 }))
+  scores.push(new Score('crimson', { x: 90, y: 50 }, 1))
+  scores.push(new Score('aqua', { x: width - 90, y: 50 }, -1))
 
   changeState(new GameStateStart())
 }
@@ -162,6 +162,7 @@ function draw() {
 
 function reset() {
   timer.start(60000)
+  // timer.start(2000)
   scores.forEach(score => (score.score = 0))
 }
 

@@ -3,8 +3,9 @@ class Box extends Body {
     super(x, y)
 
     this.particles = []
+    this.jetRotation = -PI / 2
 
-    this.thrust = 0.011
+    this.thrust = 0.01
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
 
@@ -40,6 +41,8 @@ class Box extends Body {
     force.mult(magnitude)
     force.mult(this.thrust)
     Matter.Body.applyForce(this.body, this.body.position, force)
+
+    this.jetRotation = angle || this.jetRotation
   }
 
   setVectorInput(vectorInput) {
@@ -128,14 +131,14 @@ class Box extends Body {
     circle(0, 0, this.w * 0.25)
     pop()
 
-    rotate(this.vectorInput.angle)
+    rotate(this.jetRotation)
     // Flame
     const flameOffset = randomGaussian() * 2
     fill('red')
     beginShape()
-    vertex(-this.w * 0.25, -this.h * 0.2)
+    vertex(-this.w * 0.25, -this.h * 0.16)
     vertex(-this.w * 0.7 * this.vectorInput.magnitude, flameOffset)
-    vertex(-this.w * 0.25, this.h * 0.2)
+    vertex(-this.w * 0.25, this.h * 0.16)
     endShape(CLOSE)
     fill('yellow')
     beginShape()

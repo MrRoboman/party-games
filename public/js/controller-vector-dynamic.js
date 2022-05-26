@@ -27,7 +27,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
   ellipseMode(RADIUS)
 
-  maxRadius = width * 0.4
+  maxRadius = width * 0.3
 }
 
 function draw() {

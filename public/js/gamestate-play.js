@@ -1,7 +1,7 @@
 class GameStatePlay extends GameState {
   start() {
     Matter.Events.on(engine, 'collisionStart', this.checkForGoal)
-    Matter.Events.on(engine, 'collisionEnd', this.bounceItHard)
+    // Matter.Events.on(engine, 'collisionEnd', this.bounceItHard)
 
     this.startTime = Date.now()
   }
@@ -20,7 +20,7 @@ class GameStatePlay extends GameState {
 
   end() {
     Matter.Events.off(engine, 'collisionStart', this.checkForGoal)
-    Matter.Events.off(engine, 'collisionEnd', this.bounceItHard)
+    // Matter.Events.off(engine, 'collisionEnd', this.bounceItHard)
   }
 
   bounceItHard(event) {

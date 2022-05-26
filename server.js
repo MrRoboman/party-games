@@ -69,6 +69,7 @@ io.on('connection', function (socket) {
 
     if (isNewPlayer) {
       players.push({
+        vectorInput: { magnitude: 0, angle: 0 },
         buttons: [0, 0, 0],
         isActive: true,
         socket,
@@ -126,6 +127,22 @@ io.on('connection', function (socket) {
     for (const id in gameClients) {
       const game = gameClients[id]
       game.socket.emit('buttons', allButtons)
+    }
+  })
+
+  socket.on('vectorInput', vectorInput => {
+    console.log(vectorInput) // eslint-disable-line
+    players.forEach(player => {
+      if (player.socket.id === socket.id) {
+        player.vectorInput = vectorInput
+      }
+    })
+
+    const allVectorInputs = players.map(p => p.vectorInput)
+
+    for (const id in gameClients) {
+      const game = gameClients[id]
+      game.socket.emit('vectorInputs', allVectorInputs)
     }
   })
 })

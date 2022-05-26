@@ -20,37 +20,37 @@ let config = {
     // W
     87: {
       player: 0,
-      action: 0,
+      vectorInput: { x: 0, y: -1 },
     },
     // Player 1 LEFT
     // A
     65: {
       player: 0,
-      action: 1,
+      vectorInput: { x: -1, y: 0 },
     },
     // Player 1 RIGHT
     // D
     68: {
       player: 0,
-      action: 2,
+      vectorInput: { x: 1, y: 0 },
     },
     // Player 2 UP
     // up arrow
     38: {
       player: 1,
-      action: 0,
+      vectorInput: { x: 0, y: -1 },
     },
     // Player 2 LEFT
     // left arrow
     37: {
       player: 1,
-      action: 1,
+      vectorInput: { x: -1, y: 0 },
     },
     // Player 2 RIGHT
     // right arrow
     39: {
       player: 1,
-      action: 2,
+      vectorInput: { x: 1, y: 0 },
     },
   },
 }
@@ -104,6 +104,13 @@ function setupSocket() {
     console.log({ allButtons }) // eslint-disable-line
     allButtons.forEach((buttons, idx) => {
       players[idx].buttons = buttons
+    })
+  })
+
+  socket.on('vectorInputs', vectorInputs => {
+    console.log({ vectorInputs }) // eslint-disable-line
+    vectorInputs.forEach((vectorInput, idx) => {
+      players[idx].setVectorInput(vectorInput)
     })
   })
 }
@@ -161,7 +168,7 @@ function draw() {
 }
 
 function reset() {
-  timer.start(60000)
+  timer.start(12000000)
   // timer.start(2000)
   scores.forEach(score => (score.score = 0))
 }
@@ -274,29 +281,9 @@ function isCollisionBetweenBodies({ bodyA, bodyB }, body1, body2) {
 
 function keyPressed() {
   if (config.keyboardControls[keyCode]) {
-    const { player, action } = config.keyboardControls[keyCode]
-    players[player].buttons[action] += 1
+    const { player, vectorInput } = config.keyboardControls[keyCode]
+    players[player].setVectorInput(vectorInput)
   }
-
-  // if (keyCode === UP_ARROW) {
-  //   box.buttons.up += 1
-  // }
-  // if (keyCode === LEFT_ARROW) {
-  //   box.buttons.left += 1
-  // }
-  // if (keyCode === RIGHT_ARROW) {
-  //   box.buttons.right += 1
-  // }
-
-  // // D
-  // if (keyCode === 68) {
-  //   box.buttons.rotateRight += 1
-  // }
-
-  // // A
-  // if (keyCode === 65) {
-  //   box.buttons.rotateLeft += 1
-  // }
 
   // Enter
   if (keyCode === ENTER) {
@@ -315,26 +302,6 @@ function keyPressed() {
 function keyReleased() {
   if (config.keyboardControls[keyCode]) {
     const { player, action } = config.keyboardControls[keyCode]
-    players[player].buttons[action] -= 1
+    players[player].setVectorInput(vectorInput)
   }
-
-  // if (keyCode === UP_ARROW) {
-  //   box.buttons.up -= 1
-  // }
-  // if (keyCode === LEFT_ARROW) {
-  //   box.buttons.left -= 1
-  // }
-  // if (keyCode === RIGHT_ARROW) {
-  //   box.buttons.right -= 1
-  // }
-
-  // // D
-  // if (keyCode === 68) {
-  //   box.buttons.rotateRight -= 1
-  // }
-
-  // // A
-  // if (keyCode === 65) {
-  //   box.buttons.rotateLeft -= 1
-  // }
 }

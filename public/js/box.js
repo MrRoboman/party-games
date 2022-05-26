@@ -2,7 +2,7 @@ class Box extends Body {
   constructor(x, y, w, h, options = {}) {
     super(x, y)
 
-    this.thrust = 0.012
+    this.thrust = 0.011
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
 
@@ -14,6 +14,8 @@ class Box extends Body {
     // rotateLeft: 0,
     // }
     this.buttons = [0, 0, 0]
+    this.vectorInput = { magnitude: 0, angle: 0 }
+    // this.vectorInputFactor = 0.01
 
     this.w = w
     this.h = h
@@ -23,12 +25,27 @@ class Box extends Body {
   }
 
   input() {
-    const mult = 1 // for testing
-    this.up(this.buttons[0] * mult)
-    this.left(this.buttons[1] * mult)
-    this.right(this.buttons[2] * mult)
+    // const mult = 1 // for testing
+    // this.up(this.buttons[0] * mult)
+    // this.left(this.buttons[1] * mult)
+    // this.right(this.buttons[2] * mult)
+
     // this.rotateRight(this.buttons.rotateRight * mult)
     // this.rotateLeft(this.buttons.rotateLeft * mult)
+
+    const { angle, magnitude } = this.vectorInput
+    const force = p5.Vector.fromAngle(angle)
+    force.mult(magnitude)
+    force.mult(this.thrust)
+    Matter.Body.applyForce(this.body, this.body.position, force)
+  }
+
+  setVectorInput(vectorInput) {
+    this.vectorInput = vectorInput
+
+    // if (Matter.Vector.magnitudeSquared(this.vectorInput) > 1) {
+    //   this.vectorInput = Matter.Vector.normalise(this.vectorInput)
+    // }
   }
 
   up(multiplier = 1) {

@@ -2,6 +2,8 @@ class Box extends Body {
   constructor(x, y, w, h, options = {}) {
     super(x, y)
 
+    this.particles = []
+
     this.thrust = 0.011
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
@@ -127,6 +129,22 @@ class Box extends Body {
     pop()
 
     rotate(this.vectorInput.angle)
+    // Flame
+    const flameOffset = randomGaussian() * 2
+    fill('red')
+    beginShape()
+    vertex(-this.w * 0.25, -this.h * 0.2)
+    vertex(-this.w * 0.7 * this.vectorInput.magnitude, flameOffset)
+    vertex(-this.w * 0.25, this.h * 0.2)
+    endShape(CLOSE)
+    fill('yellow')
+    beginShape()
+    vertex(-this.w * 0.25, -this.h * 0.1)
+    vertex(-this.w * 0.45 * this.vectorInput.magnitude, flameOffset)
+    vertex(-this.w * 0.25, this.h * 0.1)
+    endShape(CLOSE)
+
+    // Jet
     fill(150)
     beginShape()
     vertex(-this.w * 0.25, -this.h * 0.2)

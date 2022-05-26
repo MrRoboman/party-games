@@ -118,8 +118,22 @@ class Box extends Body {
 
     push()
     translate(this.x, this.y)
+
+    push()
     rotate(this.angle)
     rect(0, 0, this.w, this.h)
+    fill(100)
+    circle(0, 0, this.w * 0.25)
+    pop()
+
+    rotate(this.vectorInput.angle)
+    fill(150)
+    beginShape()
+    vertex(-this.w * 0.25, -this.h * 0.2)
+    vertex(this.w * 0.35, -this.h * 0.05)
+    vertex(this.w * 0.35, this.h * 0.05)
+    vertex(-this.w * 0.25, this.h * 0.2)
+    endShape(CLOSE)
     pop()
   }
 }

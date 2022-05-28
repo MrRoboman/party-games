@@ -134,7 +134,7 @@ function setup() {
   engine = Matter.Engine.create()
   world = engine.world
 
-  engine.gravity.scale = 0.0007
+  // engine.gravity.scale = 0.0007
 
   createArenaBodies()
 
@@ -208,17 +208,22 @@ function createArenaBodies() {
   } = config.arena
 
   // Build Ramps
-  ;[
-    [wallThickness, ceilingThickness],
-    [wallThickness, height - floorThickness],
-    [width - wallThickness, ceilingThickness],
-    [width - wallThickness, height - floorThickness],
-  ].forEach(([x, y]) => {
-    const ramp = new Wall(x, y, rampThickness, rampThickness, { angle: PI / 4 })
-    // bodies.push(ramp)
-    // arenaBodies.ramps.push(ramp)
-    arenaBods.push(ramp)
-  })
+  // ;[
+  //   [wallThickness, ceilingThickness],
+  //   [wallThickness, height - floorThickness],
+  //   [width - wallThickness, ceilingThickness],
+  //   [width - wallThickness, height - floorThickness],
+  // ].forEach(([x, y]) => {
+  //   const ramp = new Wall(x, y, rampThickness, rampThickness, { angle: PI / 4 })
+  //   // bodies.push(ramp)
+  //   // arenaBodies.ramps.push(ramp)
+  //   arenaBods.push(ramp)
+  // })
+  // arenaBods.ramps.push(ramp)
+  arenaBods.push(new Ramp(width - 455, height - 305, 280, 10))
+  arenaBods.push(new Ramp(455, height - 305, 280, 10, PI / 2))
+  arenaBods.push(new Ramp(455, 305, 280, 10, PI))
+  arenaBods.push(new Ramp(width - 455, 305, 280, 10, -PI / 2))
 
   // Build Goals
   ;[
@@ -264,6 +269,8 @@ function createArenaBodies() {
   arenaBods.push(
     new Wall(width / 2, height - floorThickness / 2, width, floorThickness),
   )
+
+  // Ramp temp
 }
 
 function removeArenaBodies() {

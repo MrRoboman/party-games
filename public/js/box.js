@@ -127,13 +127,25 @@ class Box extends Body {
     push()
     rotate(this.angle)
     circle(0, 0, this.w / 2)
+
+    strokeWeight(3)
+    const count = 6
+    for (let i = 0; i < count; i++) {
+      const angle = map(i, 0, count, 0, TWO_PI)
+      const x = (cos(angle) * this.w) / 2
+      const y = (sin(angle) * this.w) / 2
+      line(0, 0, x, y)
+    }
+
     fill(100)
     circle(0, 0, this.w * 0.25)
+
     pop()
 
     rotate(this.jetRotation)
     // Flame
     const flameOffset = randomGaussian() * 2
+    strokeWeight(3)
     fill('red')
     beginShape()
     vertex(-this.w * 0.25, -this.h * 0.16)

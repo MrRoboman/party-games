@@ -115,6 +115,13 @@ function setupSocket() {
   })
 }
 
+let bounceSound, jetSound
+
+function preload() {
+  bounceSound = loadSound('assets/bounce.wav')
+  jetSound = loadSound('assets/explosion.wav')
+}
+
 function setup() {
   setupSocket()
 
@@ -304,4 +311,8 @@ function keyReleased() {
     const { player, action } = config.keyboardControls[keyCode]
     players[player].setVectorInput(vectorInput)
   }
+}
+
+function mousePressed() {
+  bounceSound.play()
 }

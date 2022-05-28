@@ -30,7 +30,7 @@ function setup() {
   setupSocket()
 
   fromPosition = createVector(width / 2, height / 2)
-  maxRadius = width * 0.3
+  maxRadius = width * 0.01
 }
 
 function draw() {

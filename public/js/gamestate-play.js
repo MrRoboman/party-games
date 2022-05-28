@@ -1,7 +1,7 @@
 class GameStatePlay extends GameState {
   start() {
     Matter.Events.on(engine, 'collisionStart', this.checkForGoal)
-    // Matter.Events.on(engine, 'collisionEnd', this.bounceItHard)
+    Matter.Events.on(engine, 'collisionStart', this.playCollisionSound)
 
     this.startTime = Date.now()
   }
@@ -20,7 +20,16 @@ class GameStatePlay extends GameState {
 
   end() {
     Matter.Events.off(engine, 'collisionStart', this.checkForGoal)
-    // Matter.Events.off(engine, 'collisionEnd', this.bounceItHard)
+    Matter.Events.off(engine, 'collisionStart', this.playCollisionSound)
+  }
+
+  playCollisionSound(event) {
+    event.pairs.forEach(pair => {
+      if (pair.bodyA === ball.body || pair.bodyB === ball.body) {
+        console.log('bounce') // eslint-disable-line
+        bounceSound.play()
+      }
+    })
   }
 
   bounceItHard(event) {

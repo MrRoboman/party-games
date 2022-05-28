@@ -23,7 +23,7 @@ class Box extends Body {
     this.w = w
     this.h = h
 
-    this.body = Matter.Bodies.rectangle(x, y, w, h, options)
+    this.body = Matter.Bodies.circle(x, y, w / 2, options)
     Matter.World.add(world, this.body)
   }
 
@@ -126,7 +126,7 @@ class Box extends Body {
 
     push()
     rotate(this.angle)
-    rect(0, 0, this.w, this.h)
+    circle(0, 0, this.w / 2)
     fill(100)
     circle(0, 0, this.w * 0.25)
     pop()

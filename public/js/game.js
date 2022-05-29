@@ -91,7 +91,7 @@ function setupSocket() {
     serverPlayers.forEach(({ isActive, fill, startPosition }, idx) => {
       if (!players[idx]) {
         const { x, y } = startPosition
-        const box = new Box(width * x, height * y, 100, 100)
+        const box = new Box(width * x, height * y, 150, 150)
         box.fill = fill
         players.push(box)
       }
@@ -152,11 +152,11 @@ function setup() {
   ball = addBody(
     new Ball(width / 2, height / 2 - 200, 50, {
       inertia: Infinity,
-      restitution: 1,
+      restitution: 0.8,
       friction: 0,
       frictionAir: 0,
       frictionStatic: 0,
-      density: 0.0005,
+      density: 0.00005,
     }),
   )
 

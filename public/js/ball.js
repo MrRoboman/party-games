@@ -1,5 +1,6 @@
 class Ball extends Body {
   constructor(x, y, r, options = {}) {
+    console.log({ x, y }) // eslint-disable-line
     super(x, y)
 
     this.r = r

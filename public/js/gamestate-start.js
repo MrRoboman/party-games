@@ -4,7 +4,7 @@ class GameStateStart extends GameState {
       reset()
     }
 
-    ball && ball.reset(width / 2, height / 2 - 200)
+    ball && ball.reset(width / 2, height / 2)
 
     players.forEach((player, idx) => {
       const { x, y } = player.startPosition

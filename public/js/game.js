@@ -98,6 +98,7 @@ function setupSocket() {
           frictionAir: 0.01,
           frictionStatic: 1,
           // density: 0.00005,
+          mass: 8,
         })
         box.fill = fill
         players.push(box)
@@ -157,13 +158,15 @@ function setup() {
   // )
 
   ball = addBody(
-    new Ball(width / 2, height / 2 - 200, 50, {
+    new Ball(width / 2, height / 2, 50, {
       inertia: Infinity,
       restitution: 1,
       friction: 0,
       frictionAir: 0.01,
       frictionStatic: 0,
-      density: 0.00005,
+      // density: 0.00005,
+      // density: 0.0008,
+      mass: 5,
     }),
   )
 
@@ -227,6 +230,7 @@ function createArenaBodies() {
   //   arenaBods.push(ramp)
   // })
   // arenaBods.ramps.push(ramp)
+
   arenaBods.push(new Ramp(width - 455, height - 305, 280, 10))
   arenaBods.push(new Ramp(455, height - 305, 280, 10, PI / 2))
   arenaBods.push(new Ramp(455, 305, 280, 10, PI))

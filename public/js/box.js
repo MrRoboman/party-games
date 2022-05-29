@@ -5,7 +5,7 @@ class Box extends Body {
     this.particles = []
     this.jetRotation = -PI / 2
 
-    this.thrust = 0.002
+    this.thrust = 0.004
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
 
@@ -42,7 +42,7 @@ class Box extends Body {
     force.mult(magnitude)
     force.mult(this.thrust)
     if (this.lastVectorInput.magnitude === 0) {
-      force.mult(20)
+      force.mult(1)
     }
     Matter.Body.applyForce(this.body, this.body.position, force)
 

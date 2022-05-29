@@ -5,7 +5,7 @@ class Box extends Body {
     this.particles = []
     this.jetRotation = -PI / 2
 
-    this.thrust = 0.025
+    this.thrust = 0.002
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
 
@@ -18,6 +18,7 @@ class Box extends Body {
     // }
     this.buttons = [0, 0, 0]
     this.vectorInput = { magnitude: 0, angle: 0 }
+    this.lastVectorInput = { magnitude: 0, angle: 0 }
     // this.vectorInputFactor = 0.01
 
     this.w = w
@@ -40,9 +41,14 @@ class Box extends Body {
     const force = p5.Vector.fromAngle(angle)
     force.mult(magnitude)
     force.mult(this.thrust)
+    if (this.lastVectorInput.magnitude === 0) {
+      force.mult(20)
+    }
     Matter.Body.applyForce(this.body, this.body.position, force)
 
     this.jetRotation = angle || this.jetRotation
+
+    this.lastVectorInput = this.vectorInput
   }
 
   setVectorInput(vectorInput) {

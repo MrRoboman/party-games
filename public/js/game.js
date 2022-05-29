@@ -91,7 +91,14 @@ function setupSocket() {
     serverPlayers.forEach(({ isActive, fill, startPosition }, idx) => {
       if (!players[idx]) {
         const { x, y } = startPosition
-        const box = new Box(width * x, height * y, 150, 150)
+        const box = new Box(width * x, height * y, 100, 100, {
+          // inertia: Infinity,
+          restitution: 1,
+          friction: 0,
+          frictionAir: 0.01,
+          frictionStatic: 1,
+          // density: 0.00005,
+        })
         box.fill = fill
         players.push(box)
       }
@@ -134,7 +141,7 @@ function setup() {
   engine = Matter.Engine.create()
   world = engine.world
 
-  // engine.gravity.scale = 0.0007
+  engine.gravity.scale = 0.0
 
   createArenaBodies()
 
@@ -152,9 +159,9 @@ function setup() {
   ball = addBody(
     new Ball(width / 2, height / 2 - 200, 50, {
       inertia: Infinity,
-      restitution: 0.8,
+      restitution: 1,
       friction: 0,
-      frictionAir: 0,
+      frictionAir: 0.01,
       frictionStatic: 0,
       density: 0.00005,
     }),

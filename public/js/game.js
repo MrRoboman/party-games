@@ -91,7 +91,7 @@ function setupSocket() {
     serverPlayers.forEach(({ isActive, fill, startPosition }, idx) => {
       if (!players[idx]) {
         const { x, y } = startPosition
-        const box = new Box(width * x, height * y, 150, 150)
+        const box = new Box(width * x, height * y, 100, 100)
         box.fill = fill
         players.push(box)
       }

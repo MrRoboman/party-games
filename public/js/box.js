@@ -5,7 +5,7 @@ class Box extends Body {
     this.particles = []
     this.jetRotation = -PI / 2
 
-    this.thrust = 0.025
+    this.thrust = 0.012
     this.thrustLateral = 0.005
     this.thrustRotate = 0.0015
 

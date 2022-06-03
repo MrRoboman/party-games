@@ -116,10 +116,12 @@ function setupSocket() {
 }
 
 let bounceSound, jetSound
+let qr
 
 function preload() {
   bounceSound = loadSound('assets/bounce.wav')
   jetSound = loadSound('assets/explosion.wav')
+  qr = loadImage('assets/qr.png')
 }
 
 function setup() {
@@ -172,6 +174,7 @@ function draw() {
   gameState.input()
   gameState.update()
   gameState.draw()
+  image(qr, width - qr.width / 2, height - qr.height, 150, 150)
 }
 
 function reset() {

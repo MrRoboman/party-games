@@ -1,5 +1,7 @@
 // https://gamedevacademy.org/create-a-basic-multiplayer-game-in-phaser-3-with-socket-io-part-1/
 
+const PORT = process.env.PORT || 8081
+
 const config = require('./public/js/server-config.json')
 
 const express = require('express')
@@ -162,6 +164,6 @@ function updateGameClientsOnPlayers() {
   }
 }
 
-server.listen(8081, function () {
+server.listen(PORT, function () {
   console.log(`Listening on ${server.address().port}`)
 })
